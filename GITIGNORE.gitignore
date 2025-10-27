@@ -1,0 +1,16 @@
+# dependencies
+node_modules/
+# builds
+dist/
+# editor
+.vscode/
+.idea/
+# logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+# env
+.env
+.env.*
+# vercel
+.vercel
