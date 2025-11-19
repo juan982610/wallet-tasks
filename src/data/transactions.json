@@ -1,0 +1,18 @@
+[
+  {
+    "id": "1",
+    "type": "gasto",
+    "category": "Trabajo",
+    "amount": 2000,
+    "date": "2000-11-11",
+    "note": "Día laboral"
+  },
+  {
+    "id": "2",
+    "type": "ingreso",
+    "category": "Trabajo",
+    "amount": 2000,
+    "date": "2000-11-11",
+    "note": "Día laboral"
+  }
+]
