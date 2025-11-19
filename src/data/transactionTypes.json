@@ -1,0 +1,4 @@
+[
+  { "value": "gasto", "label": "Gasto" },
+  { "value": "ingreso", "label": "Ingreso" }
+]

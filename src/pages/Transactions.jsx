@@ -1,4 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
+import typeOptions from "../data/transactionTypes.json";
+import categoryType from "../data/categoryType.json";
 import { createTransaction, deleteTransaction, getTransactions } from "../services/transactionsService";
 import { formatCOP } from "../utils/formatMoney";
 import { formatDateISOToHuman } from "../utils/formatDate";
@@ -19,7 +21,7 @@ export default function Transactions() {
   function handleChange(e){
 
     const {name,value} = e.target;
-    
+
     setForm(prev => ({
       ...prev,
       [name]: value
@@ -97,22 +99,33 @@ export default function Transactions() {
             <form className="grid gap-4">
               <select
                 name="type"
+                value={form.type}
                 className="p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
+                onChange={handleChange}
               >
-                <option value="gasto">Gasto</option>
-                <option value="ingreso">Ingreso</option>
+                {typeOptions.map(option => (
+                  <option key={option.value} value={option.value}>
+                  {option.label} </option>
+                  ))}
               </select>
 
-              <input
-                type="text"
-                name="category"
-                placeholder="Categoría"
+              <select
+                name="type"
+                value={form.type}
                 className="p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
-              />
+                onChange={handleChange}
+              >
+                {categoryType.map(option => (
+                  <option key={option.value} value={option.value}>
+                  {option.label} </option>
+                  ))}
+              </select>
 
               <input
                 type="number"
                 name="amount"
+                value={form.amount}
+                onChange={handleChange}
                 placeholder="Monto"
                 className="p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
               />
@@ -120,12 +133,16 @@ export default function Transactions() {
               <input
                 type="date"
                 name="date"
+                value={form.date}
+                onChange={handleChange}
                 className="p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
               />
 
               <textarea
                 name="note"
                 rows="2"
+                value={form.note}
+                onChange={handleChange}
                 placeholder="Nota (opcional)"
                 className="p-2 border rounded dark:bg-gray-800 dark:border-gray-700 resize-none"
               />
