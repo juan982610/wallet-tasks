@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'wallet_tasks_transactions';
+const STORAGE_KEY = 'wallet_transactions';
 
 export function getTransactions() {
   try {
@@ -16,7 +16,6 @@ export function saveTransactions(list) {
 
 
 export function createTransaction(data) {
-  // data esperado: { type: 'gasto'|'ingreso', category, amount(Number), date(YYYY-MM-DD), note }
   const list = getTransactions();
   const tx = {
     id: crypto.randomUUID(),      // id único

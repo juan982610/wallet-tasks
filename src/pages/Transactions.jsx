@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import typeOptions from "../data/transactionTypes.json";
 import categoryType from "../data/categoryType.json";
 import initialTransactions from "../data/transactions.json";
-import { createTransaction, deleteTransaction, getTransactions } from "../services/transactionsService";
+import { getTransactions, createTransaction, deleteTransaction } from "../services/transactionsService";
 import { formatCOP } from "../utils/formatMoney";
 import { formatDateISOToHuman } from "../utils/formatDate";
 
@@ -17,8 +17,7 @@ const initialForm = {
 export default function Transactions() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(initialForm);
-  const [transactions, setTransactions] = useState(initialTransactions)
-
+  const [transactions, setTransactions] = useState(() => getTransactions());
 
   function handleChange(e){
 
@@ -31,7 +30,17 @@ export default function Transactions() {
 
   }
 
+  function handleSubmit(e){
+    e.preventDefault();
+    const newTx = createTransaction(form);
+    setTransactions(prev => [...prev, newTx])
+    setShowForm(false); 
+  }
 
+  function handleDelete(id){
+    const updatedList = deleteTransaction(id);
+    setTransactions(updatedList);
+  }
 
   return (
     <section className="space-y-6">
@@ -72,6 +81,7 @@ export default function Transactions() {
               <th className="text-left p-3">Monto</th>
               <th className="text-left p-3">Fecha</th>
               <th className="text-left p-3">Nota</th>
+              <th className="text-left p-3">Acciones</th>
             </tr>
           </thead>
           <tbody>
@@ -79,7 +89,7 @@ export default function Transactions() {
               // 🟡 Caso: no hay transacciones
               <tr>
                 <td
-                  colSpan={5} // pon 6 si tu tabla tiene 6 columnas (ej: Acciones)
+                  colSpan={6} // pon 6 si tu tabla tiene 6 columnas (ej: Acciones)
                   className="text-center text-gray-500 dark:text-gray-400 p-6"
                 >
                   No hay transacciones registradas aún.
@@ -124,6 +134,29 @@ export default function Transactions() {
                   <td className="p-3 text-slate-300 text-sm">
                     {transacion.note || "—"}
                   </td>
+                  {/* Acciones */}
+                  <td className="p-3">
+                    <div className="flex items-center gap-2">
+                      {/* Editar */}
+                      <button
+                        type="button"
+                        onClick={() => handleEdit(transacion)}
+                        className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/20 transition-colors"
+                        >
+                        Editar
+                      </button>
+
+                      {/* Eliminar */}
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(transacion.id)}
+                        className="w-8 h-8 flex items-center justify-center rounded-full border border-red-500/30 text-red-400 bg-red-500/10 hover:bg-red-500/20 hover:text-red-300 transition-colors text-sm font-bold"
+                      >
+                        ×
+                      </button>
+                    </div>
+                  </td>
+
                 </tr>
               ))
             )}
@@ -143,7 +176,7 @@ export default function Transactions() {
 
             <h2 className="text-xl font-bold mb-4">Nueva transacción</h2>
 
-            <form className="grid gap-4">
+            <form onSubmit={handleSubmit} className="grid gap-4">
               <select
                 name="type"
                 value={form.type}
