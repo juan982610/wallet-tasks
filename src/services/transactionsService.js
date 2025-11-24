@@ -39,5 +39,5 @@ export function updateTransaction(id, patch) {
   const list = getTransactions();
   const next = list.map(t => (t.id === id ? { ...t, ...patch } : t));
   saveTransactions(next);
-  return next.find(t => t.id === id);
+  return next;
 }

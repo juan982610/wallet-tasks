@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import typeOptions from "../data/transactionTypes.json";
 import categoryType from "../data/categoryType.json";
 import initialTransactions from "../data/transactions.json";
-import { getTransactions, createTransaction, deleteTransaction } from "../services/transactionsService";
+import { getTransactions, createTransaction, deleteTransaction, updateTransaction } from "../services/transactionsService";
 import { formatCOP } from "../utils/formatMoney";
 import { formatDateISOToHuman } from "../utils/formatDate";
 
@@ -18,7 +18,58 @@ export default function Transactions() {
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [transactions, setTransactions] = useState(() => getTransactions());
+  const [errors, setErrors] = useState({});
 
+  function handleCloseForm(){
+    setShowForm(false)
+  }
+
+  function validateForm(){
+    const newErrors = {};
+
+    // Category
+    if (!form.category.trim()) {
+      newErrors.category = "La categoría o motivo es obligatoria.";
+    }
+
+    // Amount
+    if (!form.amount) {
+      newErrors.amount = "El monto es obligatorio.";
+    } else if (isNaN(form.amount)) {
+      newErrors.amount = "El monto debe ser numérico.";
+    } else if (Number(form.amount) <= 0) {
+      newErrors.amount = "El monto debe ser mayor a 0.";
+    }
+
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD
+
+    if (!form.date) {
+      newErrors.date = "La fecha es obligatoria.";
+    } else if (!dateRegex.test(form.date)) {
+      newErrors.date = "Formato de fecha inválido.";
+    }
+
+    return newErrors;
+
+  }
+
+  function handleOpenCreate(transacion = null){
+  if (transacion) {
+    // Modo edición
+
+    setForm({
+      ...transacion,
+      amount: String(transacion.amount ?? ""),
+    });
+  } else {
+    // Modo creación
+    setForm(initialForm);
+  }
+
+  setErrors({});
+  setShowForm(true);  
+}
+  
   function handleChange(e){
 
     const {name,value} = e.target;
@@ -32,10 +83,28 @@ export default function Transactions() {
 
   function handleSubmit(e){
     e.preventDefault();
-    const newTx = createTransaction(form);
-    setTransactions(prev => [...prev, newTx])
-    setShowForm(false); 
-  }
+
+    const validationErrors = validateForm(form);
+
+    
+    if (Object.keys(validationErrors).length > 0){
+      setErrors(validationErrors);
+      return;
+    }
+    
+    if(form.id){
+      console.log(form.id,form);
+      const updatedList = updateTransaction(form.id, form); 
+      setTransactions(updatedList);
+    }else{
+      const newTx = createTransaction(form);
+      setTransactions(prev => [...prev, newTx])
+    }
+
+    setShowForm(false);
+    setForm(initialForm);
+    setErrors({}); 
+  } 
 
   function handleDelete(id){
     const updatedList = deleteTransaction(id);
@@ -48,7 +117,7 @@ export default function Transactions() {
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Transacciones</h1>
         <button
-          onClick={() => setShowForm(true)}
+          onClick={() => handleOpenCreate()}
           className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium"
         >
           + Agregar transacción
@@ -140,7 +209,7 @@ export default function Transactions() {
                       {/* Editar */}
                       <button
                         type="button"
-                        onClick={() => handleEdit(transacion)}
+                        onClick={() => handleOpenCreate(transacion)}
                         className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-yellow-500/10 text-yellow-400 border border-yellow-500/30 hover:bg-yellow-500/20 transition-colors"
                         >
                         Editar
@@ -168,7 +237,7 @@ export default function Transactions() {
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
           <div className="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-lg shadow-lg relative">
             <button
-              onClick={() => setShowForm(false)}
+              onClick={handleCloseForm}
               className="absolute top-2 right-3 text-gray-400 hover:text-gray-200 text-2xl leading-none"
             >
               ×
@@ -189,17 +258,16 @@ export default function Transactions() {
                   ))}
               </select>
 
-              <select
-                name="type"
-                value={form.type}
-                className="p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
+              <input
+                type="text"
+                name="category"
+                value={form.category}
                 onChange={handleChange}
-              >
-                {categoryType.map(option => (
-                  <option key={option.value} value={option.value}>
-                  {option.label} </option>
-                  ))}
-              </select>
+                placeholder="Motivo"
+                className="p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
+              />
+              
+              {errors.category && <p className="text-red-400 text-xs mt-1">{errors.category}</p>}
 
               <input
                 type="number"
@@ -210,6 +278,8 @@ export default function Transactions() {
                 className="p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
               />
 
+              {errors.amount && <p className="text-red-400 text-xs mt-1">{errors.amount}</p>}
+
               <input
                 type="date"
                 name="date"
@@ -217,6 +287,9 @@ export default function Transactions() {
                 onChange={handleChange}
                 className="p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
               />
+
+              {errors.date && <p className="text-red-400 text-xs mt-1">{errors.date}</p>}
+
 
               <textarea
                 name="note"
@@ -230,7 +303,7 @@ export default function Transactions() {
               <div className="flex justify-end gap-2">
                 <button
                   type="button"
-                  onClick={() => setShowForm(false)}
+                  onClick={handleCloseForm}
                   className="px-4 py-2 rounded bg-gray-200 dark:bg-gray-700"
                 >
                   Cancelar
