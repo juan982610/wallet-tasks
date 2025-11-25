@@ -20,6 +20,13 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState(() => getTransactions());
   const [errors, setErrors] = useState({});
 
+  const [filterType, setFilterType] = useState("all");
+
+  const filteredTransactions = transactions.filter(tx => {
+    if (filterType === "all") return true;
+    return tx.type === filterType;
+  });
+
   const totalIngresos = transactions
   .filter(tx => tx.type === "ingreso")
   .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
@@ -150,6 +157,30 @@ export default function Transactions() {
         </div>
       </div>
 
+      <div className="flex gap-2 mb-2">
+        <button
+          onClick={() => setFilterType("all")}
+          className={`px-3 py-1 rounded-full text-xs font-semibold
+            ${filterType === "all" ? "bg-slate-700 text-white" : "bg-slate-800 text-slate-300"}`}
+        >
+          Todos
+        </button>
+        <button
+          onClick={() => setFilterType("ingreso")}
+          className={`px-3 py-1 rounded-full text-xs font-semibold
+            ${filterType === "ingreso" ? "bg-green-600 text-white" : "bg-slate-800 text-green-300"}`}
+        >
+          Ingresos
+        </button>
+        <button
+          onClick={() => setFilterType("gasto")}
+          className={`px-3 py-1 rounded-full text-xs font-semibold
+            ${filterType === "gasto" ? "bg-red-600 text-white" : "bg-slate-800 text-red-300"}`}
+        >
+          Gastos
+        </button>
+      </div>
+
       {/* Tabla / Lista */}
       <div className="rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow">
         <table className="w-full text-sm">
@@ -164,7 +195,7 @@ export default function Transactions() {
             </tr>
           </thead>
           <tbody>
-            {transactions.length === 0 ? (
+            {filteredTransactions.length === 0 ? (
               // 🟡 Caso: no hay transacciones
               <tr>
                 <td
@@ -176,7 +207,7 @@ export default function Transactions() {
               </tr>
             ) : (
               // 🟢 Caso: sí hay transacciones
-              transactions.map(transacion => (
+              filteredTransactions.map(transacion => (
                 <tr
                   key={transacion.id}
                   className="border-t border-slate-700/60 hover:bg-slate-800/60 transition-colors"
