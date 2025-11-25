@@ -20,6 +20,16 @@ export default function Transactions() {
   const [transactions, setTransactions] = useState(() => getTransactions());
   const [errors, setErrors] = useState({});
 
+  const totalIngresos = transactions
+  .filter(tx => tx.type === "ingreso")
+  .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+
+  const totalGastos = transactions
+  .filter(tx => tx.type === "gasto")
+  .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+
+  const balance = totalIngresos - totalGastos;
+
   function handleCloseForm(){
     setShowForm(false)
   }
@@ -128,15 +138,15 @@ export default function Transactions() {
       <div className="grid gap-4 md:grid-cols-3">
         <div className="rounded-xl p-4 bg-white dark:bg-gray-800 shadow">
           <p className="text-sm text-gray-500 dark:text-gray-400">Ingresos</p>
-          <p className="text-2xl font-bold text-green-600">$0</p>
+          <p className="text-2xl font-bold text-green-600">{formatCOP(totalIngresos)}</p>
         </div>
         <div className="rounded-xl p-4 bg-white dark:bg-gray-800 shadow">
           <p className="text-sm text-gray-500 dark:text-gray-400">Gastos</p>
-          <p className="text-2xl font-bold text-red-600">$0</p>
+          <p className="text-2xl font-bold text-red-600">{formatCOP(totalGastos)}</p>
         </div>
         <div className="rounded-xl p-4 bg-white dark:bg-gray-800 shadow">
           <p className="text-sm text-gray-500 dark:text-gray-400">Balance</p>
-          <p className="text-2xl font-bold">$0</p>
+          <p className="text-2xl font-bold">{formatCOP(balance)}</p>
         </div>
       </div>
 
