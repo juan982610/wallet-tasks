@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import typeOptions from "../data/transactionTypes.json";
-import categoryType from "../data/categoryType.json";
-import initialTransactions from "../data/transactions.json";
+import { FilterChips } from "../components/transactions/FilterChips";
+import { StatsCard } from "../components/transactions/StatsCard";
 import { getTransactions, createTransaction, deleteTransaction, updateTransaction } from "../services/transactionsService";
 import { formatCOP } from "../utils/formatMoney";
 import { formatDateISOToHuman } from "../utils/formatDate";
@@ -143,43 +143,27 @@ export default function Transactions() {
 
       {/* KPIs */}
       <div className="grid gap-4 md:grid-cols-3">
-        <div className="rounded-xl p-4 bg-white dark:bg-gray-800 shadow">
-          <p className="text-sm text-gray-500 dark:text-gray-400">Ingresos</p>
-          <p className="text-2xl font-bold text-green-600">{formatCOP(totalIngresos)}</p>
-        </div>
-        <div className="rounded-xl p-4 bg-white dark:bg-gray-800 shadow">
-          <p className="text-sm text-gray-500 dark:text-gray-400">Gastos</p>
-          <p className="text-2xl font-bold text-red-600">{formatCOP(totalGastos)}</p>
-        </div>
-        <div className="rounded-xl p-4 bg-white dark:bg-gray-800 shadow">
-          <p className="text-sm text-gray-500 dark:text-gray-400">Balance</p>
-          <p className="text-2xl font-bold">{formatCOP(balance)}</p>
-        </div>
+        <StatsCard
+          label="Ingresos"
+          amount={totalIngresos}
+          variant="ingreso"
+        />
+        <StatsCard
+          label="Gastos"
+          amount={totalGastos}
+          variant="gasto"
+        />
+        <StatsCard
+          label="Balance"
+          amount={balance}
+          variant="neutral"
+        />
       </div>
 
-      <div className="flex gap-2 mb-2">
-        <button
-          onClick={() => setFilterType("all")}
-          className={`px-3 py-1 rounded-full text-xs font-semibold
-            ${filterType === "all" ? "bg-slate-700 text-white" : "bg-slate-800 text-slate-300"}`}
-        >
-          Todos
-        </button>
-        <button
-          onClick={() => setFilterType("ingreso")}
-          className={`px-3 py-1 rounded-full text-xs font-semibold
-            ${filterType === "ingreso" ? "bg-green-600 text-white" : "bg-slate-800 text-green-300"}`}
-        >
-          Ingresos
-        </button>
-        <button
-          onClick={() => setFilterType("gasto")}
-          className={`px-3 py-1 rounded-full text-xs font-semibold
-            ${filterType === "gasto" ? "bg-red-600 text-white" : "bg-slate-800 text-red-300"}`}
-        >
-          Gastos
-        </button>
-      </div>
+      <FilterChips
+        value={filterType}
+        onChange={setFilterType}
+      />
 
       {/* Tabla / Lista */}
       <div className="rounded-2xl overflow-hidden bg-white dark:bg-gray-800 shadow">
