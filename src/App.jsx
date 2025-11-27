@@ -4,11 +4,8 @@ import Sidebar from "./components/Sidebar"
 import Header from "./components/Header"
 
 // Páginas
-import Dashboard from "./pages/Dashboard"
 import Transactions from "./pages/Transactions"
-import Task from "./pages/Task"
-import Reports from "./pages/Reports"
-import Settings from "./pages/Settings"
+
 
 
 export default function App() {
@@ -23,11 +20,7 @@ export default function App() {
 
         <main className="flex-1 p-6">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/transactions" element={<Transactions />} />
-            <Route path="/task" element={<Task />} />
-            <Route path="/reports" element={<Reports />} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/" element={<Transactions />} />
           </Routes>
         </main>
       </div>
