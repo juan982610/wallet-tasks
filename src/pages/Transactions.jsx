@@ -1,12 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
-import typeOptions from "../data/transactionTypes.json";
+import { useState } from "react";
 import { FilterChips } from "../components/transactions/FilterChips";
 import { StatsCard } from "../components/transactions/StatsCard";
-import { getTransactions, createTransaction, deleteTransaction, updateTransaction } from "../services/transactionsService";
-import { formatCOP } from "../utils/formatMoney";
-import { formatDateISOToHuman } from "../utils/formatDate";
+// import { getTransactions, createTransaction, deleteTransaction, updateTransaction } from "../services/transactionsService";
 import { TransactionModal } from "../components/transactions/TransactionModal";
 import { TransactionsTable } from "../components/transactions/TransactionsTable";
+import { useTransactions } from "../hooks/useTransactions";
+
 
 
 const initialForm = {
@@ -18,9 +17,17 @@ const initialForm = {
   }
 
 export default function Transactions() {
+
+  const {
+  transactions,
+  addTransaction,
+  editTransaction,
+  removeTransaction,
+} = useTransactions();
+
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(initialForm);
-  const [transactions, setTransactions] = useState(() => getTransactions());
+  // const [transactions, setTransactions] = useState(() => getTransactions());
   const [errors, setErrors] = useState({});
 
   const [filterType, setFilterType] = useState("all");
@@ -44,7 +51,7 @@ export default function Transactions() {
     setShowForm(false)
   }
 
-  function validateForm(){
+  function validateForm(form){
     const newErrors = {};
 
     // Category
@@ -113,12 +120,9 @@ export default function Transactions() {
     }
     
     if(form.id){
-      console.log(form.id,form);
-      const updatedList = updateTransaction(form.id, form); 
-      setTransactions(updatedList);
+      editTransaction(form.id, form)
     }else{
-      const newTx = createTransaction(form);
-      setTransactions(prev => [...prev, newTx])
+      addTransaction(form);
     }
 
     setShowForm(false);
@@ -127,8 +131,7 @@ export default function Transactions() {
   } 
 
   function handleDelete(id){
-    const updatedList = deleteTransaction(id);
-    setTransactions(updatedList);
+    removeTransaction(id);
   }
 
   return (
