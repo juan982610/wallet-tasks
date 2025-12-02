@@ -1,0 +1,76 @@
+export function FiltersBar({
+  searchTerm,
+  onSearchChange,
+  categoryFilter,
+  onCategoryChange,
+  dateFrom,
+  onDateFromChange,
+  dateTo,
+  onDateToChange,
+  categories
+}) {
+  return (
+    <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-4 items-end mb-4">
+
+      {/* Buscar */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+          Buscar (categoría o nota)
+        </label>
+        <input
+          type="text"
+          value={searchTerm}
+          onChange={e => onSearchChange(e.target.value)}
+          placeholder="Ej: arriendo, mercado..."
+          className="p-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700"
+        />
+      </div>
+
+      {/* Categoría */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+          Categoría
+        </label>
+        <select
+          value={categoryFilter}
+          onChange={e => onCategoryChange(e.target.value)}
+          className="p-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700"
+        >
+          <option value="all">Todas</option>
+          {categories.map(cat => (
+            <option key={cat.value} value={cat.label ?? cat.value}>
+              {cat.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* Desde */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+          Desde
+        </label>
+        <input
+          type="date"
+          value={dateFrom}
+          onChange={e => onDateFromChange(e.target.value)}
+          className="p-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700"
+        />
+      </div>
+
+      {/* Hasta */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+          Hasta
+        </label>
+        <input
+          type="date"
+          value={dateTo}
+          onChange={e => onDateToChange(e.target.value)}
+          className="p-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700"
+        />
+      </div>
+
+    </div>
+  );
+}

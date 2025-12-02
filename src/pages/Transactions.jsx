@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo  } from "react";
 import { FilterChips } from "../components/transactions/FilterChips";
+import { FiltersBar } from "../components/transactions/FiltersBar";
 import { StatsCard } from "../components/transactions/StatsCard";
-// import { getTransactions, createTransaction, deleteTransaction, updateTransaction } from "../services/transactionsService";
+import categoryType from "../data/categoryType.json";
 import { TransactionModal } from "../components/transactions/TransactionModal";
 import { TransactionsTable } from "../components/transactions/TransactionsTable";
 import { useTransactions } from "../hooks/useTransactions";
@@ -27,15 +28,38 @@ export default function Transactions() {
 
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState(initialForm);
-  // const [transactions, setTransactions] = useState(() => getTransactions());
   const [errors, setErrors] = useState({});
 
   const [filterType, setFilterType] = useState("all");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [dateFrom, setDateFrom] = useState("");
+  const [dateTo, setDateTo] = useState("");
 
-  const filteredTransactions = transactions.filter(tx => {
-    if (filterType === "all") return true;
-    return tx.type === filterType;
+  
+
+ const filteredTransactions = useMemo(() => {
+  const search = searchTerm.toLowerCase().trim();
+
+  return transactions.filter(tx => {
+    if (filterType !== "all" && tx.type !== filterType) return false;
+
+    // Categoría
+    if (categoryFilter !== "all" && tx.category !== categoryFilter) return false;
+
+    // Búsqueda por texto (categoría o nota)
+    if (search) {
+      const inCategory = tx.category?.toLowerCase().includes(search);
+      if (!inCategory) return false;
+    }
+
+    // Rango de fechas (comparación simple de strings YYYY-MM-DD)
+    if (dateFrom && tx.date < dateFrom) return false;
+    if (dateTo && tx.date > dateTo) return false;
+
+    return true;
   });
+}, [transactions, filterType, categoryFilter, searchTerm, dateFrom, dateTo]);
 
   const totalIngresos = transactions
   .filter(tx => tx.type === "ingreso")
@@ -169,6 +193,18 @@ export default function Transactions() {
       <FilterChips
         value={filterType}
         onChange={setFilterType}
+      />
+
+      <FiltersBar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        categoryFilter={categoryFilter}
+        onCategoryChange={setCategoryFilter}
+        dateFrom={dateFrom}
+        onDateFromChange={setDateFrom}
+        dateTo={dateTo}
+        onDateToChange={setDateTo}
+        categories={categoryType}
       />
 
       {/* Tabla / Lista */}
