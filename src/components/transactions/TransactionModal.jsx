@@ -1,4 +1,4 @@
-import typeOptions from "../../data/transactionTypes.json";
+// import typeOptions from "../../data/transactionTypes.json";
 
 export function TransactionModal({
   isOpen,
@@ -8,8 +8,17 @@ export function TransactionModal({
   onClose,
   onSubmit,
   isEditing,
+  typeOptions,
+  categories
 }) {
   if (!isOpen) return null;
+
+  function selectCategoriesTypes(form){
+    const selectCategories = categories.find(cat => (cat.titulo === form.type));
+    return selectCategories ? selectCategories.items : []
+  }
+
+  const selectCategories = selectCategoriesTypes(form);
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -41,19 +50,18 @@ export function TransactionModal({
           </select>
 
           {/* Categoría / Motivo */}
-          <div>
-            <input
-              type="text"
-              name="category"
-              value={form.category}
-              onChange={onChange}
-              placeholder="Motivo"
-              className="w-full p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
-            />
-            {errors.category && (
-              <p className="text-red-400 text-xs mt-1">{errors.category}</p>
-            )}
-          </div>
+          <select
+          name="category"
+          className="p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
+          onChange={onChange}
+          value={form.category}
+          >
+            {selectCategories.map(cat => (
+              <option key={cat.id} value={cat.value}>
+                {cat.label}
+              </option>
+            ))}
+          </select>
 
           {/* Monto */}
           <div>

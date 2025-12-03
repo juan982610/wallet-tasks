@@ -2,15 +2,17 @@
   {
     "titulo": "gasto",
     "items": [ 
-      { "value": "hormiga", "label": "Hormiga" },
-      { "value": "casa", "label": "Casa" }
+      { "id": 313,"value": "hormiga", "label": "Hormiga" },
+      { "id": 123, "value": "casa", "label": "Casa" },
+      { "id": 314,"value": "proyectado", "label": "Proyectado" }
     ]
   },
   {
     "titulo": "ingreso",
     "items": [ 
-      { "value": "trabajo", "label": "Trabajo" },
-      { "value": "carro", "label": "Carro" }
+      { "id": 114, "value": "trabajo", "label": "Trabajo" },
+      { "id": 252,"value": "carro", "label": "Carro" },
+      { "id": 411, "value": "proyectado", "label": "Proyectado" }
     ]
   }
 ]

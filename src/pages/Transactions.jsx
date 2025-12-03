@@ -1,5 +1,5 @@
 import { useState, useMemo  } from "react";
-import { FilterChips } from "../components/transactions/FilterChips";
+// import { FilterChips } from "../components/transactions/FilterChips";
 import { FiltersBar } from "../components/transactions/FiltersBar";
 import { StatsCard } from "../components/transactions/StatsCard";
 import categoryType from "../data/categoryType.json";
@@ -140,6 +140,7 @@ export default function Transactions() {
   function handleSubmit(e){
     e.preventDefault();
 
+    console.log(form);
     const validationErrors = validateForm(form);
 
     
@@ -232,6 +233,8 @@ export default function Transactions() {
         onClose={handleCloseForm}
         onSubmit={handleSubmit}
         isEditing={Boolean(form.id)}
+        typeOptions={transactionTypes}
+        categories={categoryType}
       />
     </section>
   )

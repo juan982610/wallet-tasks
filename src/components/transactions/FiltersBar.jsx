@@ -18,7 +18,6 @@ export function FiltersBar({
         return categories.flatMap(group => group.items);
     }
     
-    // Busca solo el grupo correcto (gasto o ingreso)
     const group = categories.find(g => g.titulo === filterType);
     return group ? group.items : [];
   }
@@ -63,7 +62,7 @@ export function FiltersBar({
           <option value="all">Todas</option>
           {
             filterCategories.map(item => (
-            <option key={item.value} value={item.value}>
+            <option key={item.id} value={item.value}>
               {item.label}
             </option>
           ))}
