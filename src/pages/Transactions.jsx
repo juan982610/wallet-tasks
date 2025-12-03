@@ -3,6 +3,7 @@ import { FilterChips } from "../components/transactions/FilterChips";
 import { FiltersBar } from "../components/transactions/FiltersBar";
 import { StatsCard } from "../components/transactions/StatsCard";
 import categoryType from "../data/categoryType.json";
+import transactionTypes from "../data/transactionTypes.json";
 import { TransactionModal } from "../components/transactions/TransactionModal";
 import { TransactionsTable } from "../components/transactions/TransactionsTable";
 import { useTransactions } from "../hooks/useTransactions";
@@ -188,12 +189,13 @@ export default function Transactions() {
           amount={balance}
           variant="neutral"
         />
-      </div>
+        <StatsCard
+          label="Proyectado"
+          amount={0}
+          variant="neutral"
+        />
 
-      <FilterChips
-        value={filterType}
-        onChange={setFilterType}
-      />
+      </div>
 
       <FiltersBar
         searchTerm={searchTerm}
@@ -205,6 +207,9 @@ export default function Transactions() {
         dateTo={dateTo}
         onDateToChange={setDateTo}
         categories={categoryType}
+        types={transactionTypes}
+        filterType={filterType}
+        onChangeType={setFilterType}
       />
 
       {/* Tabla / Lista */}

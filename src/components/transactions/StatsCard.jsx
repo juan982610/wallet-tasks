@@ -3,7 +3,7 @@ import { formatCOP } from "../../utils/formatMoney";
 const variantStyles = {
   ingreso: "text-green-600",
   gasto: "text-red-600",
-  neutral: "",
+  neutral: ""
 };
 
 export function StatsCard({ label, amount, variant = "neutral" }) {
