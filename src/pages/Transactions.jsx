@@ -70,6 +70,10 @@ export default function Transactions() {
   .filter(tx => tx.type === "gasto")
   .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
 
+  const totalProyectado = transactions
+  .filter(tx => tx.category === "proyectado")
+  .reduce((sum, tx) => sum + Number(tx.amount || 0),0)
+
   const balance = totalIngresos - totalGastos;
 
   function handleCloseForm(){
@@ -191,8 +195,8 @@ export default function Transactions() {
         />
         <StatsCard
           label="Proyectado"
-          amount={0}
-          variant="neutral"
+          amount={totalProyectado}
+          variant="proyectado"
         />
 
       </div>

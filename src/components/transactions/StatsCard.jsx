@@ -3,6 +3,7 @@ import { formatCOP } from "../../utils/formatMoney";
 const variantStyles = {
   ingreso: "text-green-600",
   gasto: "text-red-600",
+  proyectado: "text-blue-600",
   neutral: ""
 };
 

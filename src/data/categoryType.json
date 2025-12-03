@@ -1,5 +1,16 @@
 [
-  { "value": "trabajo", "label": "Trabajo" },
-  { "value": "marlon", "label": "Marlon" },
-  { "value": "carro", "label": "Carro" }
+  {
+    "titulo": "gasto",
+    "items": [ 
+      { "value": "hormiga", "label": "Hormiga" },
+      { "value": "casa", "label": "Casa" }
+    ]
+  },
+  {
+    "titulo": "ingreso",
+    "items": [ 
+      { "value": "trabajo", "label": "Trabajo" },
+      { "value": "carro", "label": "Carro" }
+    ]
+  }
 ]

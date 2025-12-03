@@ -12,6 +12,19 @@ export function FiltersBar({
   filterType,
   onChangeType
 }) {
+
+  function getCategoriesByType(filterType){
+     if (filterType === "all") {
+        return categories.flatMap(group => group.items);
+    }
+    
+    // Busca solo el grupo correcto (gasto o ingreso)
+    const group = categories.find(g => g.titulo === filterType);
+    return group ? group.items : [];
+  }
+
+  const filterCategories = getCategoriesByType(filterType)
+
   return (
     <div className="grid gap-3 md:grid-cols-3 lg:grid-cols-4 items-end mb-4">
 
@@ -34,7 +47,6 @@ export function FiltersBar({
         </select>
       </div>
 
-
       
 
       {/* Categoría */}
@@ -47,10 +59,12 @@ export function FiltersBar({
           onChange={e => onCategoryChange(e.target.value)}
           className="p-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700"
         >
+          
           <option value="all">Todas</option>
-          {categories.map(cat => (
-            <option key={cat.value} value={cat.label ?? cat.value}>
-              {cat.label}
+          {
+            filterCategories.map(item => (
+            <option key={item.value} value={item.value}>
+              {item.label}
             </option>
           ))}
         </select>
