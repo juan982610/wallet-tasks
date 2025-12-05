@@ -194,11 +194,6 @@ export default function Transactions() {
           amount={balance}
           variant="neutral"
         />
-        <StatsCard
-          label="Proyectado"
-          amount={totalProyectado}
-          variant="proyectado"
-        />
 
       </div>
 

@@ -1,0 +1,14 @@
+[
+  {
+    "titulo": "gasto",
+    "items": [ 
+      { "id": 314, "category": "proyectado", "label": "Proyectado", "colorText": "red-green-600"  }
+    ]
+  },
+  {
+    "titulo": "ingreso",
+    "items": [ 
+      { "id": 411, "category": "proyectado", "label": "Proyectado", "colorText": "text-green-600" }
+    ]
+  }
+]

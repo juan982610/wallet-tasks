@@ -7,7 +7,7 @@ const variantStyles = {
   neutral: ""
 };
 
-export function StatsCard({ label, amount, variant = "neutral" }) {
+export function StatsCard({ label, amount, variant = "neutral"}) {
   const colorClass = variantStyles[variant] ?? variantStyles.neutral;
 
   return (
