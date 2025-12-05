@@ -68,17 +68,13 @@ export default function Transactions() {
   });
 }, [transactions, filterType, categoryFilter, banksFilter,searchTerm, dateFrom, dateTo]);
 
-  const totalIngresos = transactions
+  const totalIngresos = filteredTransactions
   .filter(tx => tx.type === "ingreso")
   .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
 
-  const totalGastos = transactions
+  const totalGastos = filteredTransactions
   .filter(tx => tx.type === "gasto")
   .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
-
-  const totalProyectado = transactions
-  .filter(tx => tx.category === "proyectado")
-  .reduce((sum, tx) => sum + Number(tx.amount || 0),0)
 
   const balance = totalIngresos - totalGastos;
 
