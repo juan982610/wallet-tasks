@@ -9,7 +9,8 @@ export function TransactionModal({
   onSubmit,
   isEditing,
   typeOptions,
-  categories
+  categories,
+  dataBank
 }) {
   if (!isOpen) return null;
 
@@ -62,6 +63,21 @@ export function TransactionModal({
               </option>
             ))}
           </select>
+
+          {/* Banks */}
+          <select
+          name="bank"
+          className="p-2 border rounded dark:bg-gray-800 dark:border-gray-700"
+          onChange={onChange}
+          value={form.bank}
+          >
+            {dataBank.map(bank => (
+              <option key={bank.id} value={bank.value}>
+                {bank.label}
+              </option>
+            ))}
+          </select>
+
 
           {/* Monto */}
           <div>

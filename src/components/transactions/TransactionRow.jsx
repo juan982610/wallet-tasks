@@ -22,6 +22,11 @@ export function TransactionRow({ tx, onEdit, onDelete }) {
         {tx.category}
       </td>
 
+        {/* bank */}
+      <td className="p-3 text-slate-100">
+        {tx.bank}
+      </td>
+
       {/* Monto */}
       <td className="p-3 font-semibold text-slate-100">
         {formatCOP(tx.amount)}

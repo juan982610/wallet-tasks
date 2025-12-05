@@ -4,7 +4,9 @@
     "items": [ 
       { "id": 313,"value": "hormiga", "label": "Hormiga" },
       { "id": 123, "value": "casa", "label": "Casa" },
-      { "id": 314,"value": "proyectado", "label": "Proyectado" }
+      { "id": 314,"value": "proyectado", "label": "Proyectado" },
+      { "id": 654,"value": "gasolina", "label": "Gasolina" },
+      { "id": 854, "value": "proyectado", "label": "Proyectado" }
     ]
   },
   {
@@ -12,6 +14,7 @@
     "items": [ 
       { "id": 114, "value": "trabajo", "label": "Trabajo" },
       { "id": 252,"value": "carro", "label": "Carro" },
+      { "id": 532,"value": "transferencia", "label": "Transferencia" },
       { "id": 411, "value": "proyectado", "label": "Proyectado" }
     ]
   }

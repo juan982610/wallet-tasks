@@ -8,6 +8,7 @@ export function TransactionsTable({ transactions, onEdit, onDelete }) {
           <tr>
             <th className="text-left p-3">Tipo</th>
             <th className="text-left p-3">Categoría</th>
+            <th className="text-left p-3">Banco</th>
             <th className="text-left p-3">Monto</th>
             <th className="text-left p-3">Fecha</th>
             <th className="text-left p-3">Nota</th>

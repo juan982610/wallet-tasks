@@ -10,7 +10,10 @@ export function FiltersBar({
   categories,
   types,
   filterType,
-  onChangeType
+  onChangeType,
+  filterBank,
+  onChangeBank,
+  dataBank
 }) {
 
   function getCategoriesByType(filterType){
@@ -68,6 +71,29 @@ export function FiltersBar({
           ))}
         </select>
       </div>
+
+
+      {/* Bank */}
+      <div className="flex flex-col gap-1">
+        <label className="text-xs font-semibold text-gray-500 dark:text-gray-400">
+          Banco
+        </label>
+        <select
+          value={filterBank}
+          onChange={e => onChangeBank(e.target.value)}
+          className="p-2 border rounded-lg text-sm dark:bg-gray-800 dark:border-gray-700"
+        >
+          
+          <option value="all">Todas</option>
+          {
+            dataBank.map(bank => (
+            <option key={bank.id} value={bank.value}>
+              {bank.label}
+            </option>
+          ))}
+        </select>
+      </div>
+
 
       {/* Buscar */}
       <div className="flex flex-col gap-1">

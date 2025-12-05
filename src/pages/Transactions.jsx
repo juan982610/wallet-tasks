@@ -4,6 +4,7 @@ import { FiltersBar } from "../components/transactions/FiltersBar";
 import { StatsCard } from "../components/transactions/StatsCard";
 import categoryType from "../data/categoryType.json";
 import transactionTypes from "../data/transactionTypes.json";
+import dataBank from "../data/dataBanks.json"
 import { TransactionModal } from "../components/transactions/TransactionModal";
 import { TransactionsTable } from "../components/transactions/TransactionsTable";
 import { useTransactions } from "../hooks/useTransactions";
@@ -13,6 +14,7 @@ import { useTransactions } from "../hooks/useTransactions";
 const initialForm = {
     type: "gasto",
     category: "",
+    bank:"",
     amount: "",
     date: "",
     note: ""
@@ -34,6 +36,7 @@ export default function Transactions() {
   const [filterType, setFilterType] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
   const [categoryFilter, setCategoryFilter] = useState("all");
+  const [banksFilter, setBanksFilter] = useState("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
 
@@ -48,6 +51,9 @@ export default function Transactions() {
     // Categoría
     if (categoryFilter !== "all" && tx.category !== categoryFilter) return false;
 
+    // Bank
+    if(banksFilter !== "all" && tx.bank !== banksFilter) return false;
+
     // Búsqueda por texto (categoría o nota)
     if (search) {
       const inCategory = tx.category?.toLowerCase().includes(search);
@@ -60,7 +66,7 @@ export default function Transactions() {
 
     return true;
   });
-}, [transactions, filterType, categoryFilter, searchTerm, dateFrom, dateTo]);
+}, [transactions, filterType, categoryFilter, banksFilter,searchTerm, dateFrom, dateTo]);
 
   const totalIngresos = transactions
   .filter(tx => tx.type === "ingreso")
@@ -128,7 +134,10 @@ export default function Transactions() {
   
   function handleChange(e){
 
+    console.log(e.target.name,e.target.value)
+
     const {name,value} = e.target;
+
 
     setForm(prev => ({
       ...prev,
@@ -210,6 +219,9 @@ export default function Transactions() {
         types={transactionTypes}
         filterType={filterType}
         onChangeType={setFilterType}
+        filterBank={banksFilter}
+        onChangeBank={setBanksFilter}
+        dataBank={dataBank}
       />
 
       {/* Tabla / Lista */}
@@ -230,6 +242,7 @@ export default function Transactions() {
         isEditing={Boolean(form.id)}
         typeOptions={transactionTypes}
         categories={categoryType}
+        dataBank={dataBank}
       />
     </section>
   )
