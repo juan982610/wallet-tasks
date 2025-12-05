@@ -8,6 +8,7 @@ import dataBank from "../data/dataBanks.json"
 import { TransactionModal } from "../components/transactions/TransactionModal";
 import { TransactionsTable } from "../components/transactions/TransactionsTable";
 import { useTransactions } from "../hooks/useTransactions";
+import { DeleteTransactionModal } from "../components/transactions/ConfirmDeleteTransactionModal"
 
 
 
@@ -30,8 +31,10 @@ export default function Transactions() {
 } = useTransactions();
 
   const [showForm, setShowForm] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
+  const [idToDelete, setIdToDelete] = useState(null);
 
   const [filterType, setFilterType] = useState("all");
   const [searchTerm, setSearchTerm] = useState("");
@@ -82,6 +85,8 @@ export default function Transactions() {
     setShowForm(false)
   }
 
+  
+
   function validateForm(form){
     const newErrors = {};
 
@@ -128,6 +133,7 @@ export default function Transactions() {
   setShowForm(true);  
 }
   
+
   function handleChange(e){
 
     console.log(e.target.name,e.target.value)
@@ -165,9 +171,27 @@ export default function Transactions() {
     setErrors({}); 
   } 
 
-  function handleDelete(id){
-    removeTransaction(id);
+  function cancelDeleteElement(){
+    setShowDelete(false);
+    setIdToDelete(null);
   }
+
+  function confirmDelete() {
+    setConfirm(true);
+  }
+
+  function handleConfirmDelete() {
+  if (idToDelete == null) return;     // por seguridad
+
+  removeTransaction(idToDelete);      // aquí SÍ eliminas
+  setShowDelete(false);               // cierras modal
+  setIdToDelete(null);                // limpias estado
+}
+
+  function handleAskDelete(id) {
+  setIdToDelete(id);      // guardas el id
+  setShowDelete(true);    // abres el modal
+}
 
   return (
     <section className="space-y-6">
@@ -181,6 +205,12 @@ export default function Transactions() {
           + Agregar transacción
         </button>
       </div>
+
+      <DeleteTransactionModal
+        isOpenDelete={showDelete}
+        onConfirm={handleConfirmDelete}
+        onCancel={cancelDeleteElement}
+      /> 
 
       {/* KPIs */}
       <div className="grid gap-4 md:grid-cols-3">
@@ -224,7 +254,7 @@ export default function Transactions() {
       <TransactionsTable
         transactions={filteredTransactions}
         onEdit={handleOpenCreate}
-        onDelete={handleDelete}
+        onDelete={handleAskDelete}
       />
 
 
