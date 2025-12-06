@@ -57,12 +57,19 @@ export function TransactionModal({
           onChange={onChange}
           value={form.category}
           >
+            <option key={0} value={0}>
+                {"Selecciona una categoría"}
+            </option>
             {selectCategories.map(cat => (
               <option key={cat.id} value={cat.value}>
                 {cat.label}
               </option>
             ))}
           </select>
+
+          {errors.category && (
+              <p className="text-red-400 text-xs mt-1">{errors.category}</p>
+            )}
 
           {/* Banks */}
           <select
@@ -71,6 +78,9 @@ export function TransactionModal({
           onChange={onChange}
           value={form.bank}
           >
+            <option key={0} value={0}>
+                {"Selecciona un banco"}
+            </option>
             {dataBank.map(bank => (
               <option key={bank.id} value={bank.value}>
                 {bank.label}
@@ -78,6 +88,9 @@ export function TransactionModal({
             ))}
           </select>
 
+            {errors.bank && (
+              <p className="text-red-400 text-xs mt-1">{errors.bank}</p>
+            )}
 
           {/* Monto */}
           <div>

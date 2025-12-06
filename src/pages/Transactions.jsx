@@ -90,9 +90,14 @@ export default function Transactions() {
   function validateForm(form){
     const newErrors = {};
 
+    console.log(form)
     // Category
     if (!form.category.trim()) {
       newErrors.category = "La categoría o motivo es obligatoria.";
+    }
+
+    if (!form.bank.trim()) {
+      newErrors.bank = "Seleccione un banco valido";
     }
 
     // Amount
@@ -151,7 +156,6 @@ export default function Transactions() {
   function handleSubmit(e){
     e.preventDefault();
 
-    console.log(form);
     const validationErrors = validateForm(form);
 
     
