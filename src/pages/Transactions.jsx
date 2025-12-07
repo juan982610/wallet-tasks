@@ -180,10 +180,6 @@ export default function Transactions() {
     setIdToDelete(null);
   }
 
-  function confirmDelete() {
-    setConfirm(true);
-  }
-
   function handleConfirmDelete() {
   if (idToDelete == null) return;     // por seguridad
 
@@ -193,8 +189,8 @@ export default function Transactions() {
 }
 
   function handleAskDelete(id) {
-  setIdToDelete(id);      // guardas el id
-  setShowDelete(true);    // abres el modal
+  setIdToDelete(id);      
+  setShowDelete(true);    
 }
 
   return (

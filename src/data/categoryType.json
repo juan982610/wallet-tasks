@@ -6,7 +6,8 @@
       { "id": 123, "value": "casa", "label": "Casa" },
       { "id": 314,"value": "proyectado", "label": "Proyectado" },
       { "id": 654,"value": "gasolina", "label": "Gasolina" },
-      { "id": 854, "value": "proyectado", "label": "Proyectado" }
+      { "id": 854, "value": "proyectado", "label": "Proyectado" },
+      { "id": 212, "value": "carro", "label": "Carro" }
     ]
   },
   {
