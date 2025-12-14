@@ -224,7 +224,7 @@ export default function Transactions() {
         <h1 className="text-2xl font-bold">Transacciones</h1>
         <button
           onClick={() => handleOpenCreate()}
-          className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-medium"
+          className="px-4 py-2 rounded-lg bg-blue-600 hover:cursor-pointer hover:bg-blue-700 text-white font-medium"
         >
           + Agregar transacción
         </button>
@@ -242,17 +242,17 @@ export default function Transactions() {
         <StatsCard
           label="Ingresos"
           amount={totalIngresos}
-          variant="ingreso"
+          colortext="green-600"
         />
         <StatsCard
           label="Gastos"
           amount={totalGastos}
-          variant="gasto"
+          colortext="red-600"
         />
         <StatsCard
           label="Balance"
           amount={balance}
-          variant="neutral"
+          colortext="blue-600"
         />
 
       </div>

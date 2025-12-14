@@ -1,19 +1,15 @@
 import { formatCOP } from "../../utils/formatMoney";
 
-const variantStyles = {
-  ingreso: "text-green-600",
-  gasto: "text-red-600",
-  proyectado: "text-blue-600",
-  neutral: ""
-};
 
-export function StatsCard({ label, amount, variant = "neutral"}) {
-  const colorClass = variantStyles[variant] ?? variantStyles.neutral;
+
+export function StatsCard({ label, amount, colortext}) {
+  const colorClassTetx = colortext ?? "white";
+  console.log(colorClassTetx)
 
   return (
     <div className="rounded-xl p-4 bg-white dark:bg-gray-800 shadow">
       <p className="text-sm text-gray-500 dark:text-gray-400">{label}</p>
-      <p className={`text-2xl font-bold ${colorClass}`}>
+      <p className={`text-2xl font-bold text-${colorClassTetx}`}>
         {formatCOP(amount)}
       </p>
     </div>
