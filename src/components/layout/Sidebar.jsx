@@ -3,6 +3,7 @@ import { NavLink } from "react-router-dom"
 export default function Sidebar() {
   const links = [
     { to: "/", label: "Transaciones" },
+    {to: "/project", label: "Proyecciones"}
   ]
 
   return (

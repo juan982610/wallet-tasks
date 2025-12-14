@@ -5,6 +5,7 @@ import Header from "./components/layout/Header"
 
 // Páginas
 import Transactions from "./pages/Transactions"
+import Project from "./pages/Project"
 
 
 
@@ -18,9 +19,10 @@ export default function App() {
       <div className="flex-1 flex flex-col">
         <Header />
 
-        <main className="flex-1 p-6">
+        <main className="p-6">
           <Routes>
             <Route path="/" element={<Transactions />} />
+            <Route path="/project" element={<Project />} />
           </Routes>
         </main>
       </div>

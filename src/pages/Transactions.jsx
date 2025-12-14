@@ -230,13 +230,11 @@ export default function Transactions() {
         </button>
       </div>
 
-      <div className="bg-white h-full w-full">
         <DeleteTransactionModal
           isOpenDelete={showDelete}
           onConfirm={handleConfirmDelete}
           onCancel={cancelDeleteElement}
         /> 
-      </div>
 
 
       {/* KPIs */}
