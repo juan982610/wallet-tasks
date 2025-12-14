@@ -16,7 +16,8 @@
       { "id": 114, "value": "trabajo", "label": "Trabajo" },
       { "id": 252,"value": "carro", "label": "Carro" },
       { "id": 532,"value": "transferencia", "label": "Transferencia" },
-      { "id": 411, "value": "proyectado", "label": "Proyectado" }
+      { "id": 411, "value": "proyectado", "label": "Proyectado" },
+      { "id": 823, "value": "trading", "label": "Trading" }
     ]
   }
 ]

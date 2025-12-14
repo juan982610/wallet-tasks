@@ -9,7 +9,9 @@ import { TransactionModal } from "../components/transactions/TransactionModal";
 import { TransactionsTable } from "../components/transactions/TransactionsTable";
 import { useTransactions } from "../hooks/useTransactions";
 import { DeleteTransactionModal } from "../components/transactions/ConfirmDeleteTransactionModal"
+import { Parser } from "expr-eval";
 
+const parser = new Parser();
 
 
 const initialForm = {
@@ -85,12 +87,21 @@ export default function Transactions() {
     setShowForm(false)
   }
 
+  function calculateAmout(input) {
+    if(!input.startsWith("=")){
+      return Number(input);
+    }
+    const expresion = input.slice(1)
+
+    const result =  parser.evaluate(expresion);
+
+    return Math.round(result);
+  } 
   
 
   function validateForm(form){
     const newErrors = {};
 
-    console.log(form)
     // Category
     if (!form.category.trim()) {
       newErrors.category = "La categoría o motivo es obligatoria.";
@@ -103,11 +114,9 @@ export default function Transactions() {
     // Amount
     if (!form.amount) {
       newErrors.amount = "El monto es obligatorio.";
-    } else if (isNaN(form.amount)) {
-      newErrors.amount = "El monto debe ser numérico.";
-    } else if (Number(form.amount) <= 0) {
-      newErrors.amount = "El monto debe ser mayor a 0.";
     }
+
+  
 
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD
 
@@ -157,17 +166,32 @@ export default function Transactions() {
     e.preventDefault();
 
     const validationErrors = validateForm(form);
+    let amoutCalculate = 0 ;
+    try {
+      console.log("AMOUNT RAW:", form.amount);
+      amoutCalculate = calculateAmout(form.amount)
+    }catch{
+      setErrors(prev =>({  
+        ...prev,
+        amount: "Expresion invalida"
+      }));
+      return;
+    }
 
-    
     if (Object.keys(validationErrors).length > 0){
       setErrors(validationErrors);
       return;
     }
+
+    const payload = {
+    ...form,
+    amount: amoutCalculate
+    };
     
     if(form.id){
-      editTransaction(form.id, form)
+      editTransaction(form.id, payload)
     }else{
-      addTransaction(form);
+      addTransaction(payload);
     }
 
     setShowForm(false);
@@ -206,11 +230,14 @@ export default function Transactions() {
         </button>
       </div>
 
-      <DeleteTransactionModal
-        isOpenDelete={showDelete}
-        onConfirm={handleConfirmDelete}
-        onCancel={cancelDeleteElement}
-      /> 
+      <div className="bg-white h-full w-full">
+        <DeleteTransactionModal
+          isOpenDelete={showDelete}
+          onConfirm={handleConfirmDelete}
+          onCancel={cancelDeleteElement}
+        /> 
+      </div>
+
 
       {/* KPIs */}
       <div className="grid gap-4 md:grid-cols-3">

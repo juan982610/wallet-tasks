@@ -95,7 +95,7 @@ export function TransactionModal({
           {/* Monto */}
           <div>
             <input
-              type="number"
+              type="text"
               name="amount"
               value={form.amount}
               onChange={onChange}
