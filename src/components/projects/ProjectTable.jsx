@@ -15,7 +15,7 @@ export function ProjectTable({rows}){
                     </tr>
                 </thead>
                 <tbody>
-                    {1 === 2 ?  (
+                    {rows.length === 0 ?  (
                     <tr>
                         <td 
                         colSpan={7}
@@ -24,9 +24,12 @@ export function ProjectTable({rows}){
                         </td>
                     </tr>
                     ) : (
-                        <ProjectsRow 
-                        
-                        />
+                        rows.map(row => (
+                            <ProjectsRow
+                            key={row.id}
+                            row={row}
+                            />
+                        ))
                     )}
                 </tbody>
             </table>
