@@ -1,11 +1,11 @@
 import { useState } from "react"
 import { StatsCard } from "../components/transactions/StatsCard"
 import { ProjectTable }  from "../components/projects/ProjectTable"
-import { getProyections } from "../services/projectionService"
+import { getProjections } from "../services/projectionService"
 
 export default function Projects(){
 
-  const [table, setTable]= useState(() => getProyections())
+  const [table, setTable]= useState(() => getProjections())
 
     return <>
     <div className="flex flex-row w-full justify-between items-center">
