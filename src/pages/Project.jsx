@@ -1,6 +1,12 @@
 import { StatsCard } from "../components/transactions/StatsCard"
+import { ProjectTable }  from "../components/projects/ProjectTable"
 
 export default function Projects(){
+
+    function table(){
+        
+    }
+
     return <>
     <div className="flex flex-row w-full justify-between items-center">
         <h1 className="font-bold text-[22px]">Proyección</h1>
@@ -25,9 +31,9 @@ export default function Projects(){
         />
     </div>
 
-
-
+    <ProjectTable
     
+    />
 
 
     </>
