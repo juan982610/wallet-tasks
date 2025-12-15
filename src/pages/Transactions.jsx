@@ -230,6 +230,7 @@ export default function Transactions() {
         </button>
       </div>
 
+      
         <DeleteTransactionModal
           isOpenDelete={showDelete}
           onConfirm={handleConfirmDelete}

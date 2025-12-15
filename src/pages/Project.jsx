@@ -1,11 +1,18 @@
 import { useState } from "react"
 import { StatsCard } from "../components/transactions/StatsCard"
 import { ProjectTable }  from "../components/projects/ProjectTable"
-import { getProjections } from "../services/projectionService"
+import { ProjectionModal } from "../components/projects/ProjectionModal"
+import { getProjections, createProjections } from "../services/projectionService"
 
 export default function Projects(){
 
-  const [table, setTable]= useState(() => getProjections())
+    const [showForm, setShowFom] = useState([])
+    const [table, setTable]= useState(() => getProjections());
+
+    function addProyections(newData){
+      const proyectioNew = createProjections(newData)
+      setTable(prev => [...prev, proyectioNew])
+    }
 
     return <>
     <div className="flex flex-row w-full justify-between items-center">
@@ -32,11 +39,8 @@ export default function Projects(){
     </div>
 
     <ProjectTable
-
-    rows={table}
-    
+      rows={table}
     />
-
-
+      {/* <ProjectionModal/>     */}
     </>
 }
