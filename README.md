@@ -16,7 +16,6 @@ Una aplicación web moderna para la gestión de finanzas personales y proyectos.
 
 - **Dashboard Interactivo**: 
   - Tarjetas de resumen (KPIs) para Balance, Ingresos y Gastos.
-  - Interfaz limpia con soporte para **Modo Oscuro**.
 
 ## Tecnologías Utilizadas
 
@@ -37,7 +36,7 @@ Asegúrate de tener [Node.js](https://nodejs.org/) instalado en tu sistema.
 
 1. Clona el repositorio:
    ```bash
-   git clone <url-del-repositorio>
+   git clone https://github.com/juan982610/wallet-tasks
    ```
 
 2. Instala las dependencias:
