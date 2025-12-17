@@ -1,5 +1,4 @@
-import { useState, useMemo  } from "react";
-// import { FilterChips } from "../components/transactions/FilterChips";
+import { useState, useMemo } from "react";
 import { FiltersBar } from "../components/transactions/FiltersBar";
 import { StatsCard } from "../components/transactions/StatsCard";
 import categoryType from "../data/categoryType.json";
@@ -15,22 +14,22 @@ const parser = new Parser();
 
 
 const initialForm = {
-    type: "gasto",
-    category: "",
-    bank:"",
-    amount: "",
-    date: "",
-    note: ""
-  }
+  type: "gasto",
+  category: "",
+  bank: "",
+  amount: "",
+  date: "",
+  note: ""
+}
 
 export default function Transactions() {
 
   const {
-  transactions,
-  addTransaction,
-  editTransaction,
-  removeTransaction,
-} = useTransactions();
+    transactions,
+    addTransaction,
+    editTransaction,
+    removeTransaction,
+  } = useTransactions();
 
   const [showForm, setShowForm] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -44,62 +43,69 @@ export default function Transactions() {
   const [banksFilter, setBanksFilter] = useState("all");
   const [dateFrom, setDateFrom] = useState("");
   const [dateTo, setDateTo] = useState("");
+  const [sortOrder, setSortOrder] = useState("desc"); // "asc" | "desc"
 
-  
 
- const filteredTransactions = useMemo(() => {
-  const search = searchTerm.toLowerCase().trim();
 
-  return transactions.filter(tx => {
-    if (filterType !== "all" && tx.type !== filterType) return false;
+  const filteredTransactions = useMemo(() => {
+    const search = searchTerm.toLowerCase().trim();
 
-    // Categoría
-    if (categoryFilter !== "all" && tx.category !== categoryFilter) return false;
+    return transactions.filter(tx => {
+      if (filterType !== "all" && tx.type !== filterType) return false;
 
-    // Bank
-    if(banksFilter !== "all" && tx.bank !== banksFilter) return false;
+      // Categoría
+      if (categoryFilter !== "all" && tx.category !== categoryFilter) return false;
 
-    // Búsqueda por texto (categoría o nota)
-    if (search) {
-      const inCategory = tx.category?.toLowerCase().includes(search);
-      if (!inCategory) return false;
-    }
+      // Bank
+      if (banksFilter !== "all" && tx.bank !== banksFilter) return false;
 
-    // Rango de fechas (comparación simple de strings YYYY-MM-DD)
-    if (dateFrom && tx.date < dateFrom) return false;
-    if (dateTo && tx.date > dateTo) return false;
+      // Búsqueda por texto (nota)
+      if (search) {
+        const inNote = tx.note?.toLowerCase().includes(search);
+        if (!inNote) return false;
+      }
 
-    return true;
-  });
-}, [transactions, filterType, categoryFilter, banksFilter,searchTerm, dateFrom, dateTo]);
+      // Rango de fechas (comparación simple de strings YYYY-MM-DD)
+      if (dateFrom && tx.date < dateFrom) return false;
+      if (dateTo && tx.date > dateTo) return false;
+
+      return true;
+    }).sort((a, b) => {
+      if (sortOrder === "asc") {
+        return new Date(a.date) - new Date(b.date);
+      } else {
+        return new Date(b.date) - new Date(a.date);
+      }
+    });
+  }, [transactions, filterType, categoryFilter, banksFilter, searchTerm, dateFrom, dateTo, sortOrder]);
 
   const totalIngresos = filteredTransactions
-  .filter(tx => tx.type === "ingreso")
-  .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+    .filter(tx => tx.type === "ingreso")
+    .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
 
   const totalGastos = filteredTransactions
-  .filter(tx => tx.type === "gasto")
-  .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
+    .filter(tx => tx.type === "gasto")
+    .reduce((sum, tx) => sum + Number(tx.amount || 0), 0);
 
   const balance = totalIngresos - totalGastos;
 
-  function handleCloseForm(){
+  function handleCloseForm() {
     setShowForm(false)
   }
 
   function calculateAmout(input) {
-    if(!input.startsWith("=")){
+    if (!input.startsWith("=")) {
       return Number(input);
     }
     const expresion = input.slice(1)
 
-    const result =  parser.evaluate(expresion);
+    const result = parser.evaluate(expresion);
 
     return Math.round(result);
-  } 
-  
+  }
 
-  function validateForm(form){
+
+  function validateForm(form) {
     const newErrors = {};
 
     // Category
@@ -116,7 +122,7 @@ export default function Transactions() {
       newErrors.amount = "El monto es obligatorio.";
     }
 
-  
+
 
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD
 
@@ -130,29 +136,29 @@ export default function Transactions() {
 
   }
 
-  function handleOpenCreate(transacion = null){
-  if (transacion) {
-    // Modo edición
+  function handleOpenCreate(transacion = null) {
+    if (transacion) {
+      // Modo edición
 
-    setForm({
-      ...transacion,
-      amount: String(transacion.amount ?? ""),
-    });
-  } else {
-    // Modo creación
-    setForm(initialForm);
+      setForm({
+        ...transacion,
+        amount: String(transacion.amount ?? ""),
+      });
+    } else {
+      // Modo creación
+      setForm(initialForm);
+    }
+
+    setErrors({});
+    setShowForm(true);
   }
 
-  setErrors({});
-  setShowForm(true);  
-}
-  
 
-  function handleChange(e){
+  function handleChange(e) {
 
-    console.log(e.target.name,e.target.value)
+    console.log(e.target.name, e.target.value)
 
-    const {name,value} = e.target;
+    const { name, value } = e.target;
 
 
     setForm(prev => ({
@@ -162,60 +168,64 @@ export default function Transactions() {
 
   }
 
-  function handleSubmit(e){
+  function handleSubmit(e) {
     e.preventDefault();
 
     const validationErrors = validateForm(form);
-    let amoutCalculate = 0 ;
+    let amoutCalculate = 0;
     try {
       console.log("AMOUNT RAW:", form.amount);
       amoutCalculate = calculateAmout(form.amount)
-    }catch{
-      setErrors(prev =>({  
+    } catch {
+      setErrors(prev => ({
         ...prev,
         amount: "Expresion invalida"
       }));
       return;
     }
 
-    if (Object.keys(validationErrors).length > 0){
+    if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
       return;
     }
 
     const payload = {
-    ...form,
-    amount: amoutCalculate
+      ...form,
+      amount: amoutCalculate
     };
-    
-    if(form.id){
+
+    if (form.id) {
       editTransaction(form.id, payload)
-    }else{
+    } else {
       addTransaction(payload);
     }
 
     setShowForm(false);
     setForm(initialForm);
-    setErrors({}); 
-  } 
+    setErrors({});
+  }
 
-  function cancelDeleteElement(){
+  function cancelDeleteElement() {
     setShowDelete(false);
     setIdToDelete(null);
   }
 
   function handleConfirmDelete() {
-  if (idToDelete == null) return;     // por seguridad
+    if (idToDelete == null) return;     // por seguridad
 
-  removeTransaction(idToDelete);      // aquí SÍ eliminas
-  setShowDelete(false);               // cierras modal
-  setIdToDelete(null);                // limpias estado
-}
+    removeTransaction(idToDelete);      // aquí SÍ eliminas
+    setShowDelete(false);               // cierras modal
+    setIdToDelete(null);                // limpias estado
+  }
 
   function handleAskDelete(id) {
-  setIdToDelete(id);      
-  setShowDelete(true);    
-}
+    setIdToDelete(id);
+    setShowDelete(true);
+  }
+
+  function handleSortToggle() {
+    setSortOrder(prev => prev === "asc" ? "desc" : "asc");
+  }
 
   return (
     <section className="space-y-6">
@@ -230,12 +240,12 @@ export default function Transactions() {
         </button>
       </div>
 
-      
-        <DeleteTransactionModal
-          isOpenDelete={showDelete}
-          onConfirm={handleConfirmDelete}
-          onCancel={cancelDeleteElement}
-        /> 
+
+      <DeleteTransactionModal
+        isOpenDelete={showDelete}
+        onConfirm={handleConfirmDelete}
+        onCancel={cancelDeleteElement}
+      />
 
 
       {/* KPIs */}
@@ -281,6 +291,8 @@ export default function Transactions() {
         transactions={filteredTransactions}
         onEdit={handleOpenCreate}
         onDelete={handleAskDelete}
+        sortOrder={sortOrder}
+        onSort={handleSortToggle}
       />
 
 
