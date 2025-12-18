@@ -24,3 +24,17 @@ export function createProjections(data) {
     saveProyections(finaly)
     return pro;
 }
+
+export function deleteProjection(id) {
+    const list = getProjections();
+    const next = list.filter(p => p.id !== id);
+    saveProyections(next);
+    return next;
+}
+
+export function updateProjection(id, patch) {
+    const list = getProjections();
+    const next = list.map(p => (p.id === id ? { ...p, ...patch } : p));
+    saveProyections(next);
+    return next;
+}

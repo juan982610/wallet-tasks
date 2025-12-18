@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 
-export function ProjectionModal({ isOpen, onClose, onSave }) {
+export function ProjectionModal({ isOpen, onClose, onSave, projectionToEdit }) {
     const [formData, setFormData] = useState({
         projectedValue: "",
         date: "",
@@ -8,17 +8,28 @@ export function ProjectionModal({ isOpen, onClose, onSave }) {
         note: ""
     })
 
-    // Resetear formulario cuando se abre el modal
+    const [errors, setErrors] = useState({})
+
     useEffect(() => {
         if (isOpen) {
-            setFormData({
-                projectedValue: "",
-                date: "",
-                enteredValue: "",
-                note: ""
-            })
+            if (projectionToEdit) {
+                setFormData({
+                    projectedValue: projectionToEdit.projectedValue || "",
+                    date: projectionToEdit.date || "",
+                    enteredValue: projectionToEdit.enteredValue || "",
+                    note: projectionToEdit.note || ""
+                })
+            } else {
+                setFormData({
+                    projectedValue: "",
+                    date: "",
+                    enteredValue: "",
+                    note: ""
+                })
+            }
+            setErrors({})
         }
-    }, [isOpen])
+    }, [isOpen, projectionToEdit])
 
     if (!isOpen) return null
 
@@ -28,23 +39,32 @@ export function ProjectionModal({ isOpen, onClose, onSave }) {
             ...prev,
             [name]: value
         }))
+        // Clear error when user types
+        if (errors[name]) {
+            setErrors(prev => ({ ...prev, [name]: null }))
+        }
+    }
+
+    const validate = () => {
+        const newErrors = {}
+        if (!formData.projectedValue) newErrors.projectedValue = "El valor proyectado es requerido"
+        if (!formData.date) newErrors.date = "La fecha de proyección es requerida"
+
+        setErrors(newErrors)
+        return Object.keys(newErrors).length === 0
     }
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        // Validación básica
-        if (!formData.projectedValue || !formData.date) {
-            alert("Por favor completa los campos obligatorios")
-            return
+        if (validate()) {
+            onSave(formData)
+            onClose()
         }
-
-        onSave(formData)
-        onClose()
     }
 
     return (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-            <div className="w-[500px] rounded-[20px] bg-gray-900 px-[25px] py-[30px]">
+            <div className="w-[500px] rounded-[20px] bg-gray-900 px-[25px] py-[30px] border border-gray-800">
                 <div className="relative mb-[5px] w-full h-[40px]">
                     <button
                         onClick={onClose}
@@ -52,7 +72,9 @@ export function ProjectionModal({ isOpen, onClose, onSave }) {
                     >
                         ×
                     </button>
-                    <h2 className="font-bold text-[20px] text-white">Agregar Proyectado</h2>
+                    <h2 className="font-bold text-[20px] text-white">
+                        {projectionToEdit ? "Editar Proyección" : "Agregar Proyectado"}
+                    </h2>
                 </div>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-[20px]">
                     <div>
@@ -61,9 +83,12 @@ export function ProjectionModal({ isOpen, onClose, onSave }) {
                             value={formData.projectedValue}
                             onChange={handleChange}
                             placeholder="Valor Proyectado"
-                            className="w-full bg-gray-800 h-[40px] px-[10px] py-[20px] rounded-[5px] text-white border border-transparent focus:border-blue-500 outline-none"
+                            className="w-full bg-gray-800 h-[40px] px-[10px] py-[20px] rounded-[5px] text-white border border-transparent focus:border-blue-500 outline-none placeholder-gray-500"
                             type="number"
                         />
+                        {errors.projectedValue && (
+                            <p className="text-red-400 text-xs mt-1">{errors.projectedValue}</p>
+                        )}
                     </div>
                     <div>
                         <input
@@ -71,9 +96,12 @@ export function ProjectionModal({ isOpen, onClose, onSave }) {
                             value={formData.date}
                             onChange={handleChange}
                             placeholder="Fecha de proyección"
-                            className="w-full bg-gray-800 h-[40px] px-[10px] py-[20px] rounded-[5px] text-white scheme-dark border border-transparent focus:border-blue-500 outline-none"
+                            className="w-full bg-gray-800 h-[40px] px-[10px] py-[20px] rounded-[5px] text-white scheme-dark border border-transparent focus:border-blue-500 outline-none placeholder-gray-500"
                             type="date"
                         />
+                        {errors.date && (
+                            <p className="text-red-400 text-xs mt-1">{errors.date}</p>
+                        )}
                     </div>
                     <div>
                         <input
@@ -81,7 +109,7 @@ export function ProjectionModal({ isOpen, onClose, onSave }) {
                             value={formData.enteredValue}
                             onChange={handleChange}
                             placeholder="Ingresado"
-                            className="w-full bg-gray-800 h-[40px] px-[10px] py-[20px] rounded-[5px] text-white border border-transparent focus:border-blue-500 outline-none"
+                            className="w-full bg-gray-800 h-[40px] px-[10px] py-[20px] rounded-[5px] text-white border border-transparent focus:border-blue-500 outline-none placeholder-gray-500"
                             type="number"
                         />
                     </div>
@@ -91,7 +119,7 @@ export function ProjectionModal({ isOpen, onClose, onSave }) {
                             value={formData.note}
                             onChange={handleChange}
                             placeholder="Nota (opcional)"
-                            className="w-full bg-gray-800 p-[10px] rounded-[5px] resize-none text-white h-[80px] border border-transparent focus:border-blue-500 outline-none"
+                            className="w-full bg-gray-800 p-[10px] rounded-[5px] resize-none text-white h-[80px] border border-transparent focus:border-blue-500 outline-none placeholder-gray-500"
                         />
                     </div>
                     <div className="flex justify-end gap-2 mt-2">
@@ -106,7 +134,7 @@ export function ProjectionModal({ isOpen, onClose, onSave }) {
                             type="submit"
                             className="px-4 py-2 rounded bg-blue-600 hover:bg-blue-700 text-white font-medium transition-colors"
                         >
-                            Guardar
+                            {projectionToEdit ? "Actualizar" : "Guardar"}
                         </button>
                     </div>
                 </form>
