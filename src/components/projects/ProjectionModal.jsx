@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react"
+import { Parser } from "expr-eval";
+
+const parser = new Parser();
 
 export function ProjectionModal({ isOpen, onClose, onSave, projectionToEdit }) {
     const [formData, setFormData] = useState({
@@ -16,7 +19,7 @@ export function ProjectionModal({ isOpen, onClose, onSave, projectionToEdit }) {
                 setFormData({
                     projectedValue: projectionToEdit.projectedValue || "",
                     date: projectionToEdit.date || "",
-                    enteredValue: projectionToEdit.enteredValue || "",
+                    enteredValue: String(projectionToEdit.enteredValue || ""),
                     note: projectionToEdit.note || ""
                 })
             } else {
@@ -45,6 +48,21 @@ export function ProjectionModal({ isOpen, onClose, onSave, projectionToEdit }) {
         }
     }
 
+    function calculateAmount(input) {
+        if (!input || typeof input !== 'string') return Number(input) || 0;
+
+        if (!input.startsWith("=")) {
+            return Number(input);
+        }
+        const expresion = input.slice(1)
+        try {
+            const result = parser.evaluate(expresion);
+            return Math.round(result);
+        } catch (error) {
+            throw new Error("Expresión inválida");
+        }
+    }
+
     const validate = () => {
         const newErrors = {}
         if (!formData.projectedValue) newErrors.projectedValue = "El valor proyectado es requerido"
@@ -56,8 +74,20 @@ export function ProjectionModal({ isOpen, onClose, onSave, projectionToEdit }) {
 
     const handleSubmit = (e) => {
         e.preventDefault()
+
+        let calculatedEnteredValue = 0;
+        try {
+            calculatedEnteredValue = calculateAmount(formData.enteredValue);
+        } catch (error) {
+            setErrors(prev => ({ ...prev, enteredValue: "Fórmula inválida" }));
+            return;
+        }
+
         if (validate()) {
-            onSave(formData)
+            onSave({
+                ...formData,
+                enteredValue: calculatedEnteredValue
+            })
             onClose()
         }
     }
@@ -83,7 +113,7 @@ export function ProjectionModal({ isOpen, onClose, onSave, projectionToEdit }) {
                             value={formData.projectedValue}
                             onChange={handleChange}
                             placeholder="Valor Proyectado"
-                            className="w-full bg-gray-800 h-[40px] px-[10px] py-[20px] rounded-[5px] text-white border border-transparent focus:border-blue-500 outline-none placeholder-gray-500"
+                            className="w-full bg-gray-800 h-[40px] px-[10px] py-[20px] rounded-[5px] text-white border border-transparent focus:border-blue-500 outline-none placeholder-gray-500 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
                             type="number"
                         />
                         {errors.projectedValue && (
@@ -110,8 +140,11 @@ export function ProjectionModal({ isOpen, onClose, onSave, projectionToEdit }) {
                             onChange={handleChange}
                             placeholder="Ingresado"
                             className="w-full bg-gray-800 h-[40px] px-[10px] py-[20px] rounded-[5px] text-white border border-transparent focus:border-blue-500 outline-none placeholder-gray-500"
-                            type="number"
+                            type="text"
                         />
+                        {errors.enteredValue && (
+                            <p className="text-red-400 text-xs mt-1">{errors.enteredValue}</p>
+                        )}
                     </div>
                     <div>
                         <textarea
