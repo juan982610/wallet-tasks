@@ -18,6 +18,17 @@ export default function Projects() {
     stats
   } = useProjections();
 
+  // Global Alert Limit State
+  const [alertLimit, setAlertLimit] = useState(() => {
+    const saved = localStorage.getItem("projectionAlertLimit");
+    return saved ? Number(saved) : 0;
+  });
+
+  const handleSaveAlertLimit = (val) => {
+    setAlertLimit(val);
+    localStorage.setItem("projectionAlertLimit", val);
+  };
+
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedProjection, setSelectedProjection] = useState(null)
 
@@ -93,6 +104,8 @@ export default function Projects() {
         onSort={handleSort}
         filter={filter}
         onFilterChange={setFilter}
+        alertLimit={alertLimit}
+        onSaveAlertLimit={handleSaveAlertLimit}
       />
 
       <ProjectionModal
